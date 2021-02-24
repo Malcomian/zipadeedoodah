@@ -1,6 +1,6 @@
 {
   "name": "zipadeedoodah",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A CLI for zipping files with Archiver based on glob patterns with minimal setup",
   "main": "index.js",
   "scripts": {

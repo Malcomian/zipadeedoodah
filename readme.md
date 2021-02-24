@@ -28,8 +28,8 @@ The user is also prompted for a comment for the archive, which will be added to 
 
 ## Example
 
-Create an archive alongside the current directory with all files and folders of the current directory with the name of the current working directory followed by a timestamp, which excludes the `node_modules` folder, includes dotfiles, and archives at the highest compression level.
+Create an archive alongside the current directory with all files and folders of the current directory with the name of the current working directory followed by a timestamp, which excludes the `node_modules` `.git` folders and `.gitignore` file, includes other dotfiles, and archives at the highest compression level.
 
 ```bash
-zipadeedoodah -o "../<cwd>_<timestamp>" -g "*/**" "*.*" -d -i "node_modules/**" -l 9
+zipadeedoodah -o "../<cwd>_<timestamp>" -g "*/**" "*.*" -d -i "node_modules" ".git/**" ".gitignore" -l 9
 ```
