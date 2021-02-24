@@ -22,7 +22,7 @@ This utility uses [Archiver](https://www.npmjs.com/package/archiver) with mostly
   -h, --help                  display help for command
 ```
 
-A couple of replacement keywords are available. `<cwd>`, which represents the name of the current working directory that the command was run in, and `<timestamp>`, which adds a timestamp in the format `yyyy-mm-dd_hour-min-sec`.
+A couple of replacement keywords are available for the filename output. `<cwd>`, which represents the name of the current working directory that the command was run in, and `<timestamp>`, which adds a timestamp in the format `yyyy-mm-dd_hour-min-sec`.
 
 The user is also prompted for a comment for the archive, which will be added to the end of the archive name.
 
