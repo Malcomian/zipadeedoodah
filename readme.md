@@ -18,7 +18,8 @@ This utility uses [Archiver](https://www.npmjs.com/package/archiver) with mostly
   -g, --globs <globs...>      Glob patterns
   -i, --ignores [ignores...]  Ignore patterns
   -d, --dot                   Include dotfiles
-  -l, --level [number]        compression level (0-9)
+  -l, --level [number]        Compression level (0-9)
+  -c, --comment [comment]     Comment (skips prompt)
   -h, --help                  display help for command
 ```
 
