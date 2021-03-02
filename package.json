@@ -1,6 +1,6 @@
 {
   "name": "zipadeedoodah",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "description": "A CLI for zipping files with Archiver based on glob patterns with minimal setup",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,11 @@
   "bin": {
     "zipadeedoodah": "./index.js"
   },
-  "keywords": ["archiver", "zip", "glob"],
+  "keywords": [
+    "archiver",
+    "zip",
+    "glob"
+  ],
   "author": "Malcolm Wyatt-Mair",
   "repository": {
     "type": "git",
