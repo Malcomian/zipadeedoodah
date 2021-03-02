@@ -1,5 +1,19 @@
 #!/usr/bin/env node
 
+var comment = ''
+const readline = require('readline')
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+})
+rl.question('Comment for this archive (optional):', (answer) => {
+  if (answer) {
+    comment = answer
+  }
+  zip()
+  rl.close()
+})
+
 function zip() {
   const start_time = new Date().getTime()
 
@@ -14,7 +28,6 @@ function zip() {
   program.option('-i, --ignores [ignores...]', 'Ignore patterns')
   program.option('-d, --dot', 'Include dotfiles')
   program.option('-l, --level [number]', 'Compression level (0-9)')
-  program.option('-c --comment [comment]', 'Comment (skips prompt)')
 
   program.parse(process.argv)
 
@@ -60,27 +73,6 @@ function zip() {
   keywords.forEach((keyword) => {
     if (opts['output'].includes(keyword.name)) opts['output'] = opts['output'].replace(keyword.name, keyword.value)
   })
-
-  // handle comment
-  var comment = ''
-  if (opts['comment'] !== true) {
-    const readline = require('readline')
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout
-    })
-    rl.question('Comment for this archive (optional):', (answer) => {
-      if (answer) {
-        comment = answer
-      }
-      zip()
-      rl.close()
-    })
-  } else if (opts['comment'] === true){
-    // if the comment flag is up but no comment is specified, then don't input a comment
-  } else {
-    comment = opts['comment']
-  }
 
   if (comment.length > 0) opts['output'] += ` - ${comment}`
   opts['output'] += '.zip'
