@@ -120,7 +120,6 @@ function zip() {
     let now = new Date().getTime()
     let yyyy = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(now)
     let mm = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(now)
-    if (mm < 10) mm = `0${mm}`
     let dd = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(now)
     let hour = new Intl.DateTimeFormat('en', { hour: '2-digit', hour12: false }).format(now)
     let min = new Intl.DateTimeFormat('en', { minute: '2-digit' }).format(now)
