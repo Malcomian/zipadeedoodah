@@ -1,6 +1,6 @@
 {
   "name": "zipadeedoodah",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A CLI for zipping files based on glob patterns with optional prompts and arguments",
   "main": "index.js",
   "scripts": {
