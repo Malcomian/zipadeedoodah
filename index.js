@@ -1,21 +1,113 @@
 #!/usr/bin/env node
 
-var comment = ''
-const readline = require('readline')
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-})
-rl.question('Comment for this archive (optional):', (answer) => {
-  if (answer) {
-    comment = answer
-  }
-  zip()
-  rl.close()
-})
+const chalk = require('chalk')
 
-function zip() {
-  const start_time = new Date().getTime()
+if (process.argv.length > 2) {
+  // commander
+  var prompt = false
+  var comment = false
+  if (process.argv.includes('-c') || process.argv.includes('--comment')) comment = true
+  if (process.argv.includes('-p') || process.argv.includes('--prompt')) prompt = true
+  if (prompt == true && comment == false) {
+    var inquirer = require('inquirer')
+    inquirer.prompt([
+      {
+        type: 'input',
+        name: 'comment',
+        message: 'Comment',
+      }
+    ]).then(answers => {
+      if (answers.comment.length > 0) {
+        let args = process.argv
+        args.push('--comment')
+        args.push(answers.comment)
+        zip(args)
+      } else {
+        zip()
+      }
+    })
+  } else {
+    zip()
+  }
+} else {
+  // full inquirer
+  var inquirer = require('inquirer')
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'output',
+      message: `Output folder`,
+      default: `../<cwd>_<timestamp>`
+    },
+    {
+      type: 'input',
+      name: 'globs',
+      message: `Include patterns`,
+      default: `"*/**" "*.*"`
+    },
+    {
+      type: 'input',
+      name: 'ignores',
+      message: `Ignore patterns`,
+      default: `"node_modules/**" ".git/**"`
+    },
+    {
+      type: 'list',
+      name: 'dot',
+      message: `Include dotfiles?`,
+      choices: [
+        'Yes',
+        'No'
+      ]
+    },
+    {
+      type: 'input',
+      name: 'level',
+      default: 9
+    },
+    {
+      type: 'input',
+      name: 'comment',
+      message: `Comment`
+    }
+  ]).then(answers => {
+    let args = process.argv
+    let keys = Object.keys(answers)
+    keys.forEach(key => {
+      switch (key) {
+        case 'globs':
+          {
+            args.push(`--${key}`)
+            let str = `${answers[key]}`
+            let regex = new RegExp(/"(.*?)"/g)
+            let items = str.match(regex)
+            if (items != null) items.forEach(item => args.push(item.split('"').join('')))
+          }
+          break;
+        case 'ignores':
+          {
+            args.push(`--${key}`)
+            let str = `${answers[key]}`
+            let regex = new RegExp(/"(.*?)"/g)
+            let items = str.match(regex)
+            if (items != null) items.forEach(item => args.push(item.split('"').join('')))
+          }
+          break;
+        case 'dot':
+          args.push(`--${key}`)
+          break;
+        default:
+          args.push(`--${key}`)
+          args.push(`${answers[key]}`)
+          break;
+      }
+    })
+    zip(args)
+  })
+}
+
+function zip(args) {
+  const start = new Date().getTime()
 
   const Command = require('commander').Command
   const program = new Command()
@@ -28,8 +120,14 @@ function zip() {
   program.option('-i, --ignores [ignores...]', 'Ignore patterns')
   program.option('-d, --dot', 'Include dotfiles')
   program.option('-l, --level [number]', 'Compression level (0-9)')
+  program.option('-p, --prompt', 'Prompt for comment')
+  program.option('-c, --comment [comment]', 'Comment')
 
-  program.parse(process.argv)
+  if (args == undefined) {
+    program.parse(process.argv)
+  } else {
+    program.parse(args)
+  }
 
   // get the options passed to the program
   var opts = program.opts()
@@ -74,7 +172,7 @@ function zip() {
     if (opts['output'].includes(keyword.name)) opts['output'] = opts['output'].replace(keyword.name, keyword.value)
   })
 
-  if (comment.length > 0) opts['output'] += ` - ${comment}`
+  if (opts['comment'] !== undefined && opts['comment'].length > 0) opts['output'] += ` - ${opts['comment']}`
   opts['output'] += '.zip'
 
   var output = fs.createWriteStream(opts['output'])
@@ -82,7 +180,7 @@ function zip() {
   var directories = 0
   var files = 0
 
-  console.log(`Archiving ${path.resolve(opts['output'])} at compression level ${opts['level']}...`)
+  console.log(`Archiving ${chalk.yellow(path.resolve(opts['output']))} at compression level ${chalk.yellow(opts['level'])}...`)
 
   archive.on('entry', (entry) => {
     if (entry.stats.isFile()) files++
@@ -94,10 +192,10 @@ function zip() {
     if (files > 1 || files == 0) plural_files = 's'
     let plural_directories = 'y'
     if (directories > 1 || directories == 0) plural_directories = 'ies'
-    console.log(`Archived ${files} file${plural_files} and ${directories} director${plural_directories}`)
-    var end_time = new Date().getTime()
-    var elapsed = end_time - start_time
-    console.log(`Wrote ${bytes(archive.pointer())} in ${elapsed}ms`)
+    console.log(`Archived ${chalk.yellow(files)} file${plural_files} and ${chalk.yellow(directories)} director${plural_directories}`)
+    var end = new Date().getTime()
+    var elapsed = end - start
+    console.log(`Wrote ${chalk.yellow(bytes(archive.pointer()))} in ${chalk.yellow(elapsed)}ms`)
   })
 
   archive.on('error', (error) => {
