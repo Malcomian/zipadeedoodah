@@ -1,7 +1,7 @@
 {
   "name": "zipadeedoodah",
-  "version": "0.0.13",
-  "description": "A CLI for zipping files with Archiver based on glob patterns with minimal setup",
+  "version": "0.1.0",
+  "description": "A CLI for zipping files based on glob patterns with optional prompts and arguments",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,6 +23,8 @@
   "dependencies": {
     "archiver": "^5.2.0",
     "bytes": "^3.1.0",
-    "commander": "^7.1.0"
+    "chalk": "^4.1.1",
+    "commander": "^7.1.0",
+    "inquirer": "^8.0.0"
   }
 }
