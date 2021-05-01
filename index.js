@@ -2,8 +2,16 @@
 
 const chalk = require('chalk')
 
+console.log('  ____  _              __           __             __     __ ')
+console.log(' /_  / (_)__  ___ ____/ /__ ___ ___/ /__  ___  ___/ /__ _/ / ')
+console.log('  / /_/ / _ \\/ _ `/ _  / -_) -_) _  / _ \\/ _ \\/ _  / _ `/ _ \\')
+console.log(' /___/_/ .__/\\_,_/\\_,_/\\__/\\__/\\_,_/\\___/\\___/\\_,_/\\_,_/_//_/')
+console.log('      /_/                                                    ')
+console.log('')
+console.log(`version ${chalk.yellow(require('./package.json').version)}`)
+
 if (process.argv.length > 2) {
-  // commander
+  // optional prompts
   var prompt = false
   var comment = false
   if (process.argv.includes('-c') || process.argv.includes('--comment')) comment = true
@@ -30,7 +38,7 @@ if (process.argv.length > 2) {
     zip()
   }
 } else {
-  // full inquirer
+  // full prompts
   var inquirer = require('inquirer')
   inquirer.prompt([
     {
