@@ -44,8 +44,13 @@ if (process.argv.length > 2) {
     {
       type: 'input',
       name: 'output',
-      message: `Output folder`,
+      message: `Output file`,
       default: `../<cwd>_<timestamp>`
+    },
+    {
+      type: 'input',
+      name: 'comment',
+      message: `Comment`
     },
     {
       type: 'input',
@@ -71,12 +76,8 @@ if (process.argv.length > 2) {
     {
       type: 'input',
       name: 'level',
-      default: 9
-    },
-    {
-      type: 'input',
-      name: 'comment',
-      message: `Comment`
+      message: 'Compression Level (0-9)',
+      default: 9,
     }
   ]).then(answers => {
     let args = process.argv
@@ -124,12 +125,12 @@ function zip(args) {
   program.version(require('./package.json').version)
 
   program.option('-o, --output <output>', 'Relative path of output file (no ext)')
+  program.option('-c, --comment [comment]', 'Comment')
+  program.option('-p, --prompt', 'Prompt for comment')
   program.option('-g, --globs <globs...>', 'Glob patterns')
   program.option('-i, --ignores [ignores...]', 'Ignore patterns')
   program.option('-d, --dot', 'Include dotfiles')
   program.option('-l, --level [number]', 'Compression level (0-9)')
-  program.option('-p, --prompt', 'Prompt for comment')
-  program.option('-c, --comment [comment]', 'Comment')
 
   if (args == undefined) {
     program.parse(process.argv)
@@ -145,6 +146,7 @@ function zip(args) {
 
   if (opts['output'] === undefined) errors.push('Please define an output file path!')
   if (opts['globs'] === undefined) errors.push('Please define at least one glob pattern!')
+  if (opts['level'] < 0 || opts['level'] > 9 || !Number.isInteger(Number(opts['level']))) errors.push('Compression level must be an integer value from 0 to 9')
 
   // if there's any errors, log them and exit
   if (errors.length > 0) {
