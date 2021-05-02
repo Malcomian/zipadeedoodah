@@ -17,12 +17,12 @@ If no arguments are passed to this script, a full set of [Inquirer](https://www.
 ```text
   -V, --version               output the version number
   -o, --output <output>       Relative path of output file (no ext)
+  -c, --comment [comment]     Comment
+  -p, --prompt                Prompt for comment
   -g, --globs <globs...>      Glob patterns
   -i, --ignores [ignores...]  Ignore patterns
   -d, --dot                   Include dotfiles
   -l, --level [number]        Compression level (0-9)
-  -p, --prompt                Prompt for comment
-  -c, --comment [comment]     Comment
   -h, --help                  display help for command
 ```
 
