@@ -232,6 +232,27 @@ function zip(args) {
     let hour = new Intl.DateTimeFormat('en', { hour: '2-digit', hour12: false }).format(now)
     let min = new Intl.DateTimeFormat('en', { minute: '2-digit' }).format(now)
     let sec = new Intl.DateTimeFormat('en', { second: '2-digit' }).format(now)
+
+    mm = two_digit(mm)
+    dd = two_digit(dd)
+    hour = two_digit(hour)
+    min = two_digit(min)
+    sec = two_digit(sec)
+
     return `${yyyy}-${mm}-${dd}_${hour}-${min}-${sec}`
+  }
+
+  /**
+   * returns two digits
+   * @param {string} value a number value
+   * @returns {string}
+   */
+  function two_digit(value) {
+    let num = Number(value)
+    if (num < 10) {
+      return `0${value}`
+    } else {
+      return value
+    }
   }
 }
