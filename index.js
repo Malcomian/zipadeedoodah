@@ -250,7 +250,7 @@ function zip(args) {
   function two_digit(value) {
     let num = Number(value)
     if (num < 10) {
-      return `0${value}`
+      return `0${num}`
     } else {
       return value
     }
