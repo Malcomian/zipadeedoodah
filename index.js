@@ -225,6 +225,7 @@ function zip(args) {
   archive.finalize()
 
   function getTimestamp() {
-    return require('moment')(Date.now()).format('YYYY-MM-DD_HH-mm-ss')
+    const { DateTime } = require('luxon')
+    return DateTime.fromMillis(Date.now()).toFormat('YYYY-MM-DD_HH-mm-ss')
   }
 }
