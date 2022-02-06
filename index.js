@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const chalk = require('chalk')
+const color = require('picocolors')
 
 console.log('  ____  _              __           __             __     __ ')
 console.log(' /_  / (_)__  ___ ____/ /__ ___ ___/ /__  ___  ___/ /__ _/ / ')
@@ -8,7 +8,7 @@ console.log('  / /_/ / _ \\/ _ `/ _  / -_) -_) _  / _ \\/ _ \\/ _  / _ `/ _ \\')
 console.log(' /___/_/ .__/\\_,_/\\_,_/\\__/\\__/\\_,_/\\___/\\___/\\_,_/\\_,_/_//_/')
 console.log('      /_/                                                    ')
 console.log('')
-console.log(`version ${chalk.yellow(require('./package.json').version)}`)
+console.log(`version ${color.yellow(require('./package.json').version)}`)
 
 if (process.argv.length > 2) {
   // optional prompts
@@ -190,7 +190,7 @@ function zip(args) {
   var directories = 0
   var files = 0
 
-  console.log(`Archiving ${chalk.yellow(path.resolve(opts['output']))} at compression level ${chalk.yellow(opts['level'])}...`)
+  console.log(`Archiving ${color.yellow(path.resolve(opts['output']))} at compression level ${color.yellow(opts['level'])}...`)
 
   archive.on('entry', (entry) => {
     if (entry.stats.isFile()) files++
@@ -202,10 +202,10 @@ function zip(args) {
     if (files > 1 || files == 0) plural_files = 's'
     let plural_directories = 'y'
     if (directories > 1 || directories == 0) plural_directories = 'ies'
-    console.log(`Archived ${chalk.yellow(files)} file${plural_files} and ${chalk.yellow(directories)} director${plural_directories}`)
+    console.log(`Archived ${color.yellow(files)} file${plural_files} and ${color.yellow(directories)} director${plural_directories}`)
     var end = new Date().getTime()
     var elapsed = end - start
-    console.log(`Wrote ${chalk.yellow(bytes(archive.pointer()))} in ${chalk.yellow(elapsed)}ms`)
+    console.log(`Wrote ${color.yellow(bytes(archive.pointer()))} in ${color.yellow(elapsed)}ms`)
   })
 
   archive.on('error', (error) => {
