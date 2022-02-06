@@ -225,34 +225,6 @@ function zip(args) {
   archive.finalize()
 
   function getTimestamp() {
-    let now = new Date().getTime()
-    let yyyy = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(now)
-    let mm = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(now)
-    let dd = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(now)
-    let hour = new Intl.DateTimeFormat('en', { hour: '2-digit', hour12: false }).format(now)
-    let min = new Intl.DateTimeFormat('en', { minute: '2-digit' }).format(now)
-    let sec = new Intl.DateTimeFormat('en', { second: '2-digit' }).format(now)
-
-    mm = two_digit(mm)
-    dd = two_digit(dd)
-    hour = two_digit(hour)
-    min = two_digit(min)
-    sec = two_digit(sec)
-
-    return `${yyyy}-${mm}-${dd}_${hour}-${min}-${sec}`
-  }
-
-  /**
-   * returns two digits
-   * @param {string} value a number value
-   * @returns {string}
-   */
-  function two_digit(value) {
-    let num = Number(value)
-    if (num < 10) {
-      return `0${num}`
-    } else {
-      return value
-    }
+    return require('moment')(Date.now()).format('YYYY-MM-DD_HH-mm-ss')
   }
 }
