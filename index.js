@@ -184,13 +184,21 @@ function zip(args) {
 
   if (opts['comment'] !== undefined && opts['comment'].length > 0) opts['output'] += ` - ${opts['comment']}`
   opts['output'] += '.zip'
+  
+  // if the output directory doesn't exist, throw an error and quit
+  let target = path.parse(path.resolve(opts['output']))
+  if (!fs.existsSync(target.dir)) {
+    console.error(`Output folder ${color.yellow(target.dir)} does not exist!`)
+    console.log(`Exiting...`)
+    return process.exit(1)
+  }
 
   var output = fs.createWriteStream(opts['output'])
 
   var directories = 0
   var files = 0
 
-  console.log(`Archiving ${color.yellow(path.resolve(opts['output']))} at compression level ${color.yellow(opts['level'])}...`)
+  console.log(`Archiving ${color.yellow(target.dir + path.sep + target.base)} at compression level ${color.yellow(opts['level'])}...`)
 
   archive.on('entry', (entry) => {
     if (entry.stats.isFile()) files++
