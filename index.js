@@ -195,6 +195,10 @@ function zip(args) {
 
   var output = fs.createWriteStream(opts['output'])
 
+  output.on('error', (error) => {
+    throw error
+  })
+
   var directories = 0
   var files = 0
 
