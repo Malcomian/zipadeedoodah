@@ -208,7 +208,7 @@ function zip(args) {
 
   var keywords = []
   keywords.push(new Keyword('<timestamp>', getTimestamp()))
-  keywords.push(new Keyword('<cwd>', path.parse(process.cwd()).dir))
+  keywords.push(new Keyword('<cwd>', process.cwd().split(path.sep).pop()))
 
   keywords.forEach((keyword) => {
     if (opts['output'].includes(keyword.name)) opts['output'] = opts['output'].replace(keyword.name, keyword.value)
