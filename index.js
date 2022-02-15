@@ -2,21 +2,20 @@
 
 const color = require('picocolors')
 
+const project = require('./package.json')
+
 console.log('  ____  _              __           __             __     __ ')
 console.log(' /_  / (_)__  ___ ____/ /__ ___ ___/ /__  ___  ___/ /__ _/ / ')
 console.log('  / /_/ / _ \\/ _ `/ _  / -_) -_) _  / _ \\/ _ \\/ _  / _ `/ _ \\')
 console.log(' /___/_/ .__/\\_,_/\\_,_/\\__/\\__/\\_,_/\\___/\\___/\\_,_/\\_,_/_//_/')
 console.log('      /_/                                                    ')
 console.log('')
-console.log(`version ${color.yellow(require('./package.json').version)}`)
+console.log(`version ${color.yellow(project.version)}`)
 
+// if any arguments are given, check args for prompts and comments
 if (process.argv.length > 2) {
   // optional prompts
-  var prompt = false
-  var comment = false
-  if (process.argv.includes('-c') || process.argv.includes('--comment')) comment = true
-  if (process.argv.includes('-p') || process.argv.includes('--prompt')) prompt = true
-  if (prompt == true && comment == false) {
+  if (check_args(process.argv)) {
     var inquirer = require('inquirer')
     inquirer.prompt([
       {
@@ -31,11 +30,11 @@ if (process.argv.length > 2) {
         args.push(answers.comment)
         zip(args)
       } else {
-        zip()
+        zip(process.argv)
       }
     })
   } else {
-    zip()
+    zip(process.argv)
   }
 } else {
   // full prompts
@@ -115,6 +114,43 @@ if (process.argv.length > 2) {
   })
 }
 
+/**
+ * checks arguments for a comment or a prompt flag
+ * @param {[string]} args array of arguments
+ * @returns {boolean}
+ */
+function check_args(args) {
+  const parsed = require('yargs-parser')(args)
+
+  let prompt = false
+  let comment = false
+  
+  let keys = Object.keys(parsed)
+
+  // set prompt to true if prompt flag is set
+  if (keys.includes('prompt')) {
+    if (parsed['prompt'] === true) prompt = true
+  }
+  if (keys.includes('p')) {
+    if (parsed['p'] === true) prompt = true
+  }
+
+  // set comment to true if it exists and isn't merely a flag
+  if (keys.includes('comment')) {
+    if (typeof parsed['comment'] !== 'boolean') comment = true
+  }
+  if (keys.includes('c')) {
+    if (typeof parsed['c'] !== 'boolean') comment = true
+  }
+
+  if (prompt === true && comment === false) return true
+  return false
+}
+
+/**
+ * zip files and folders based on arguments
+ * @param {[string]} args array of arguments
+ */
 function zip(args) {
   const start = new Date().getTime()
 
@@ -122,7 +158,7 @@ function zip(args) {
   const program = new Command()
 
   program.name('zipadeedoodah')
-  program.version(require('./package.json').version)
+  program.version(project.version)
 
   program.option('-o, --output <output>', 'Relative path of output file (no ext)')
   program.option('-c, --comment [comment]', 'Comment')
@@ -132,11 +168,7 @@ function zip(args) {
   program.option('-d, --dot', 'Include dotfiles')
   program.option('-l, --level [number]', 'Compression level (0-9)')
 
-  if (args == undefined) {
-    program.parse(process.argv)
-  } else {
-    program.parse(args)
-  }
+  program.parse(args)
 
   // get the options passed to the program
   var opts = program.opts()
@@ -151,7 +183,7 @@ function zip(args) {
   // if there's any errors, log them and exit
   if (errors.length > 0) {
     errors.forEach((error) => console.log(error))
-    process.exit()
+    process.exit(1)
   }
 
   const path = require('path')
@@ -176,7 +208,7 @@ function zip(args) {
 
   var keywords = []
   keywords.push(new Keyword('<timestamp>', getTimestamp()))
-  keywords.push(new Keyword('<cwd>', process.cwd().split(path.sep).pop()))
+  keywords.push(new Keyword('<cwd>', path.parse(process.cwd()).dir))
 
   keywords.forEach((keyword) => {
     if (opts['output'].includes(keyword.name)) opts['output'] = opts['output'].replace(keyword.name, keyword.value)
