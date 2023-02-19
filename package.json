@@ -1,7 +1,7 @@
 {
   "name": "zipadeedoodah",
-  "version": "1.0.12",
-  "description": "A CLI for zipping files based on glob patterns with optional prompts and arguments",
+  "version": "2.0.0",
+  "description": "A command line utility for archiving and recovering files.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,12 +21,13 @@
   },
   "license": "ISC",
   "dependencies": {
-    "archiver": "^5.3.0",
     "bytes": "^3.1.2",
-    "commander": "^9.0.0",
-    "inquirer": "^8.2.0",
-    "luxon": "^2.3.0",
-    "picocolors": "^1.0.0",
-    "yargs-parser": "^21.0.0"
+    "kleur": "^4.1.5",
+    "lodash": "^4.17.21",
+    "luxon": "^3.2.1",
+    "picomatch": "^2.3.1",
+    "prompts": "^2.4.2",
+    "tar": "^6.1.13",
+    "yargs-parser": "^21.1.1"
   }
 }
