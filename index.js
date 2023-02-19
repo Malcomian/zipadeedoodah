@@ -220,7 +220,11 @@ async function archive() {
 
   let base = `${path.resolve('.')}${path.sep}`
 
-  let files = get_all_files(base).filter(file => {
+  let files = get_all_files(base).map(file => {
+    // get rid of base filenames
+    let name = file.split(base)[1]
+    return name
+  }).filter(file => {
     // inclusions
     let include = false
     options.include.forEach(item => {
@@ -236,10 +240,9 @@ async function archive() {
     if (include && !exclude) return true
     return false
   }).map(file => {
-    let name = file.split(base)[1]
     // prepend names that start with @ with a "./" (a requirement for tar to work for those names)
-    if (name.startsWith('@')) name = `./${name}`
-    return name
+    if (file.startsWith('@')) file = `./${file}`
+    return file
   })
 
   // run the archive creator
