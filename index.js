@@ -1205,7 +1205,7 @@ function menu_item(title, description) {
 function parse_filename(name) {
   let result = name
   if (result.includes('<cwd>')) result = result.split('<cwd>').join(cwd())
-  if (result.includes('<version>')) result = result.split('<version>').join(project.version)
+  if (result.includes('<version>')) result = result.split('<version>').join(path.resolve(`${process.cwd()}/package.json`))
   if (result.includes('<timestamp>')) result = result.split('<timestamp>').join(get_time_string(Date.now()))
   return result
 }
