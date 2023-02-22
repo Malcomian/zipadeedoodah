@@ -1,6 +1,6 @@
 {
   "name": "zipadeedoodah",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "A command line utility for archiving and recovering files.",
   "main": "index.js",
   "scripts": {
