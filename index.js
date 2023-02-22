@@ -208,6 +208,10 @@ async function archive() {
       name: 'comment'
     })
     let { comment } = response
+    if (type_of(comment) === 'undefined') {
+      console.clear()
+      process.exit()
+    }
     if (comment !== '') comment = ` - ${comment}`
     filename = `${parse_filename(options.output)}${comment}.tgz`
   } else {
@@ -268,17 +272,17 @@ async function menu_configuration() {
   if (configuration_file !== '') console.log(`loaded ${color.yellow(configuration_file)}:`)
   let choices = [
     menu_item('...', 'Go back'),
-    menu_item('view', 'view current configuration as JSON'),
-    menu_item('load', 'load configuration file'),
-    menu_item('save', 'save configuration file'),
-    menu_item('save as', 'save configuration in new file'),
-    menu_item('output', 'output filename (string)'),
-    menu_item('include', 'include patterns (array)'),
-    menu_item('exclude', 'exclude patterns (array)'),
-    menu_item('archive directory', 'change archive directory (string)'),
-    menu_item('timestamp format', 'luxon timestamp format (string)'),
-    menu_item('comment', 'prompt for comment (boolean)'),
-    menu_item('prompt', 'open these prompt menus (boolean)'),
+    menu_item('View', 'View current configuration as JSON'),
+    menu_item('Load', 'Load configuration file'),
+    menu_item('Save', 'Save configuration file'),
+    menu_item('Save As', 'Save configuration in new file'),
+    menu_item('Output', 'Output filename (string)'),
+    menu_item('Include', 'Include patterns (array)'),
+    menu_item('Exclude', 'Exclude patterns (array)'),
+    menu_item('Archive Directory', 'Change archive directory (string)'),
+    menu_item('Timestamp Format', 'Luxon timestamp format (string)'),
+    menu_item('Comment', 'Prompt for comment (boolean)'),
+    menu_item('Prompt', 'Open these prompt menus (boolean)'),
   ]
   let response = await prompts({
     type: 'autocomplete',
@@ -292,41 +296,43 @@ async function menu_configuration() {
     case '...':
       return main()
       break;
-    case 'view':
+    case 'View':
       return menu_configuration_view()
       break;
-    case 'load':
+    case 'Load':
       return menu_configuration_load()
       break;
     case 'save':
       if (configuration_file === '') return save_as()
       return save()
       break;
-    case 'save as':
+    case 'Save As':
       return save_as()
       break;
-    case 'output':
+    case 'Output':
       return menu_configuration_edit('output')
       break;
-    case 'include':
+    case 'Include':
       return menu_configuration_edit('include')
       break;
-    case 'exclude':
+    case 'Exclude':
       return menu_configuration_edit('exclude')
       break;
-    case 'archive directory':
+    case 'Archive Directory':
       return menu_configuration_edit('archive_directory')
       break;
-    case 'timestamp format':
+    case 'Timestamp Format':
       return menu_configuration_edit('timestamp_format')
       break;
-    case 'comment':
+    case 'Comment':
       return menu_configuration_edit('comment')
       break;
-    case 'prompt':
+    case 'Prompt':
       return menu_configuration_edit('prompt')
       break;
     default:
+      console.clear()
+      process.exit()
       break;
   }
 }
@@ -391,6 +397,8 @@ async function menu_configuration_edit(key) {
       return edit_boolean(key)
       break;
     default:
+      console.clear()
+      process.exit()
       break;
   }
 }
@@ -404,6 +412,10 @@ async function edit_string(key) {
     initial: options[key]
   })
   let { answer } = response
+  if (type_of(answer) === 'undefined') {
+    console.clear()
+    process.exit()
+  }
   options[key] = answer
   return menu_configuration()
 }
@@ -469,6 +481,8 @@ async function menu_edit_list(key) {
       return menu_edit_list(key)
       break;
     default:
+      console.clear()
+      process.exit()
       break;
   }
 }
@@ -488,6 +502,9 @@ async function menu_edit_list_change(key) {
     choices
   })
   let { answer } = response
+  if (type_of(answer) === 'undefined') {
+    return menu_edit_list(key)
+  }
   if (answer === '...') return menu_edit_list(key)
   let index = options[key].indexOf(answer)
   return menu_edit_list_change_item(key, index)
@@ -502,6 +519,9 @@ async function menu_edit_list_change_item(key, index) {
     initial: options[key][index]
   })
   let { answer } = response
+  if (type_of(answer) === 'undefined') {
+    return menu_edit_list(key)
+  }
   options[key][index] = answer
   return menu_edit_list(key)
 }
@@ -515,6 +535,9 @@ async function menu_edit_list_replace(key) {
     separator: ','
   })
   let { answer } = response
+  if (type_of(answer) === 'undefined') {
+    return menu_edit_list(key)
+  }
   // reset array
   options[key] = []
   answer.forEach(item => {
@@ -541,6 +564,9 @@ async function menu_edit_list_remove(key) {
     choices
   })
   let { answer } = response
+  if (type_of(answer) === 'undefined') {
+    return menu_edit_list(key)
+  }
   if (answer === '...') return menu_edit_list(key)
   let index = options[key].indexOf(answer)
   options[key].splice(index, 1)
@@ -578,6 +604,8 @@ async function menu_edit_list_add(key) {
       return menu_edit_list_add_string(key)
       break;
     default:
+      console.clear()
+      process.exit()
       break;
   }
 }
@@ -591,6 +619,9 @@ async function menu_edit_list_add_list(key) {
     separator: ','
   })
   let { answer } = response
+  if (type_of(answer) === 'undefined') {
+    return menu_edit_list(key)
+  }
   answer.forEach(item => {
     // ignore blanks
     if (item === '') return
@@ -614,8 +645,11 @@ async function menu_edit_list_add_string(key) {
     }
   })
   let { answer } = response
+  if (type_of(answer) === 'undefined') {
+    return menu_edit_list(key)
+  }
   options[key].push(answer)
-  menu_edit_list(key)
+  return menu_edit_list(key)
 }
 
 async function menu_edit_list_view(key) {
@@ -646,9 +680,12 @@ async function menu_edit_list_add_filepath(key) {
     suggest: autocomplete_local_files
   })
   let { answer } = response
+  if (type_of(answer) === 'undefined') {
+    return menu_edit_list(key)
+  }
   if (answer === '...') return menu_edit_list(key)
   options[key].push(answer)
-  menu_edit_list(key)
+  return menu_edit_list(key)
 }
 
 async function menu_about() {
@@ -685,6 +722,9 @@ async function save_as() {
     message: 'Save Configuraiton File'
   })
   let { answer } = response
+  if (type_of(answer) === 'undefined') {
+    return main('')
+  }
   configuration_file = path.resolve(answer)
   return save()
 }
@@ -717,6 +757,9 @@ async function menu_recover_select() {
     suggest: fuzzy
   })
   let { answer } = response
+  if (type_of(answer) === 'undefined') {
+    return main()
+  }
   switch (answer) {
     case '...':
       return main()
@@ -791,6 +834,8 @@ async function menu_recover(location) {
       return main()
       break;
     default:
+      console.clear()
+      process.exit()
       break;
   }
 }
